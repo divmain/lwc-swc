@@ -2,7 +2,10 @@ use napi::{CallContext, Error, JsBuffer, JsBufferValue, JsObject, JsString, Ref,
 use napi::{Env, Task};
 use std::ops::Deref;
 use std::sync::Arc;
-use swc::{config::Config, config::JscConfig, config::Options, Compiler, TransformOutput};
+use swc::{
+  config::Config, config::JscConfig, config::Options, config::SourceMapsConfig, Compiler,
+  TransformOutput,
+};
 use swc_common::{
   errors::{ColorConfig, Handler},
   sync::Lazy,
@@ -40,7 +43,6 @@ impl Task for TranspileTask {
   fn compute(&mut self) -> Result<Self::Output> {
     let filename = self.0.clone();
     let source = self.1.deref();
-    // let source = self.1.deref();
 
     Ok(transpile(filename, &source)?)
   }
@@ -57,13 +59,10 @@ impl Task for TranspileTask {
       "code",
       env.create_string_from_std(output.transpile_result.code)?,
     )?;
-    obj.set_named_property(
-      "map",
-      env.create_string_from_std(match output.transpile_result.map {
-        Some(_map) => _map,
-        None => "".into(),
-      })?,
-    )?;
+    match output.transpile_result.map {
+      Some(_map) => obj.set_named_property("map", env.create_string_from_std(_map)?)?,
+      None => obj.set_named_property("map", env.get_null()?)?,
+    };
 
     Ok(obj)
   }
@@ -89,6 +88,8 @@ fn transpile(filename: String, source: &[u8]) -> Result<TranspiledModule> {
 
   let options = Options {
     filename: filename.clone(),
+    source_maps: Some(SourceMapsConfig::Bool(true)),
+    // source_maps: None,
     config: Config {
       env: None,
       test: None,
