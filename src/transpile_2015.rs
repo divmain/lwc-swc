@@ -3,8 +3,8 @@ use napi::{Env, Task};
 use std::ops::Deref;
 use std::sync::Arc;
 use swc::{
-  config::Config, config::JscConfig, config::Options, config::SourceMapsConfig, Compiler,
-  TransformOutput,
+  config::Config, config::JscConfig, config::Options, config::SourceMapsConfig,
+  config::TransformConfig, Compiler, TransformOutput,
 };
 use swc_common::{
   errors::{ColorConfig, Handler},
@@ -12,7 +12,7 @@ use swc_common::{
   sync::Lrc,
   FileName, FilePathMapping, SourceMap,
 };
-use swc_ecma_parser::{JscTarget, Syntax};
+use swc_ecma_parser::{EsConfig, JscTarget, Syntax};
 
 static COMPILER: Lazy<Arc<Compiler>> = Lazy::new(|| {
   let cm = Arc::new(SourceMap::new(FilePathMapping::empty()));
@@ -96,12 +96,14 @@ fn transpile(filename: String, source: &[u8]) -> Result<TranspiledModule> {
       test: None,
       exclude: None,
       jsc: JscConfig {
-        // syntax: Syntax::Typescript(Default::default()),
-        syntax: Some(Syntax::Es(Default::default())),
-        transform: None,
+        syntax: Some(Syntax::Es(EsConfig {
+          decorators: true,
+          ..Default::default()
+        })),
         external_helpers: false,
         target: Some(JscTarget::Es2015),
         minify: None,
+        transform: None,
         ..Default::default()
       },
       ..Default::default()
