@@ -88,6 +88,7 @@ fn transpile(filename: String, source: &[u8]) -> Result<TranspiledModule> {
 
   let options = Options {
     filename: filename.clone(),
+    is_module: true,
     source_maps: Some(SourceMapsConfig::Bool(true)),
     // source_maps: None,
     config: Config {
