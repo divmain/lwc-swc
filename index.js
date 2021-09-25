@@ -8,4 +8,4 @@ const { loadBinding } = require('@node-rs/helper')
  * loadBinding helper will load `package-template.[PLATFORM].node` from `__dirname` first
  * If failed to load addon, it will fallback to load from `@divmain/lwc-swc-[PLATFORM]`
  */
-module.exports = loadBinding(__dirname, 'package-template', '@divmain/lwc-swc')
+module.exports = loadBinding(__dirname, 'lwc-swc', '@divmain/lwc-swc')
