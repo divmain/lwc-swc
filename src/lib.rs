@@ -1,17 +1,69 @@
 #![deny(clippy::all)]
 
+mod transpile;
+
 #[macro_use]
 extern crate napi_derive;
 extern crate swc_common;
 // Pull in the platform-appropriate allocator.
 extern crate swc_node_base;
 
-use napi::{JsObject, Result};
-
-mod transpile_2015;
+use crate::transpile::{transpile, TranspiledModule};
+use napi::{
+  CallContext, Env, Error, JsBuffer, JsBufferValue, JsObject, JsString, Ref, Result, Task,
+};
+use std::ops::Deref;
 
 #[module_exports]
 fn init(mut exports: JsObject) -> Result<()> {
-  exports.create_named_method("transpile", transpile_2015::transpile_async)?;
+  exports.create_named_method("transpile", transpile_async)?;
   Ok(())
+}
+
+#[js_function(2)]
+pub fn transpile_async(ctx: CallContext) -> Result<JsObject> {
+  let filename = ctx.get::<JsString>(0)?.into_utf8()?.into_owned()?;
+  let source = ctx.get::<JsBuffer>(1)?.into_ref()?;
+  let task = TranspileTask(filename, source);
+  let async_task = ctx.env.spawn(task)?;
+  Ok(async_task.promise_object())
+}
+
+struct TranspileTask(pub String, pub Ref<JsBufferValue>);
+
+impl Task for TranspileTask {
+  type Output = TranspiledModule;
+  type JsValue = JsObject;
+
+  fn compute(&mut self) -> Result<Self::Output> {
+    let filename = self.0.clone();
+    let source = self.1.deref();
+
+    Ok(transpile(filename, &source)?)
+  }
+
+  fn resolve(self, env: Env, output: Self::Output) -> Result<Self::JsValue> {
+    self.1.unref(env)?;
+
+    let mut obj = env.create_object()?;
+    obj.set_named_property(
+      "filename",
+      env.create_string_from_std(output.filename.clone())?,
+    )?;
+    obj.set_named_property(
+      "code",
+      env.create_string_from_std(output.transpile_result.code)?,
+    )?;
+    match output.transpile_result.map {
+      Some(_map) => obj.set_named_property("map", env.create_string_from_std(_map)?)?,
+      None => obj.set_named_property("map", env.get_null()?)?,
+    };
+
+    Ok(obj)
+  }
+
+  fn reject(self, env: Env, err: Error) -> Result<Self::JsValue> {
+    self.1.unref(env)?;
+    Err(err)
+  }
 }
