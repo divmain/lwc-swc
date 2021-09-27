@@ -15,7 +15,7 @@ napi-derive = "1"
 swc = "0.56.1"
 swc_atoms = "0.2.7"
 swc_common = { version = "0.12", features = ["tty-emitter", "sourcemap"] }
-swc_ecma_ast = "0.52.0"
+swc_ecma_ast = "0.53.0"
 swc_ecma_codegen = "0.70.5"
 swc_ecma_minifier = "0.28.0"
 swc_ecma_parser = "0.70.3"
