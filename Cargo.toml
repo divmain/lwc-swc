@@ -19,7 +19,7 @@ swc_ecma_ast = "0.52.0"
 swc_ecma_codegen = "0.70.5"
 swc_ecma_minifier = "0.28.0"
 swc_ecma_parser = "0.70.3"
-swc_ecmascript = { version = "0.64", features = ["codegen", "minifier", "optimization", "parser", "react", "transforms", "typescript", "utils", "visit"] }
+swc_ecmascript = { version = "0.66", features = ["codegen", "minifier", "optimization", "parser", "react", "transforms", "typescript", "utils", "visit"] }
 swc_node_base = "0.3.0"
 
 [target.'cfg(all(any(windows, unix), target_arch = "x86_64", not(target_env = "musl")))'.dependencies]
