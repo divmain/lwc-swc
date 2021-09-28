@@ -9,13 +9,15 @@ const inputA = Buffer.from(`
 const inputB = Buffer.from(`
   import { LightningElement, api } from 'lwc';
 
-  export default class Example extends LightningElement {
+  class Example extends LightningElement {
       @api name = 'World!';
 
-      myMethod() {
+      @track myMethod() {
         return true;
       }
   }
+
+  export default Example;
 `);
 
 (async () => {
