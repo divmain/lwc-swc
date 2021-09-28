@@ -1,0 +1,3 @@
+[submodule "swc"]
+	path = swc
+	url = git@github.com:divmain/swc.git

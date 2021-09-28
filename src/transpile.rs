@@ -11,6 +11,7 @@ use swc_common::{
   FileName, FilePathMapping, SourceMap,
 };
 use swc_ecma_parser::{EsConfig, JscTarget, Syntax};
+use swc_ecma_preset_env::{Feature, FeatureOrModule};
 
 static COMPILER: Lazy<Arc<Compiler>> = Lazy::new(|| {
   let cm = Arc::new(SourceMap::new(FilePathMapping::empty()));
@@ -43,7 +44,51 @@ pub fn transpile(filename: String, source: &[u8]) -> Result<TranspiledModule> {
     // source_maps: None,
     config: Config {
       env: Some(swc_ecma_preset_env::Config {
-        // exclude: vec![],
+        exclude: vec![
+          FeatureOrModule::Feature(Feature::TemplateLiterals),
+          FeatureOrModule::Feature(Feature::Literals),
+          FeatureOrModule::Feature(Feature::FunctionName),
+          FeatureOrModule::Feature(Feature::ArrowFunctions),
+          FeatureOrModule::Feature(Feature::BlockScopedFunctions),
+          FeatureOrModule::Feature(Feature::Classes),
+          FeatureOrModule::Feature(Feature::ObjectSuper),
+          FeatureOrModule::Feature(Feature::ShorthandProperties),
+          FeatureOrModule::Feature(Feature::DuplicateKeys),
+          FeatureOrModule::Feature(Feature::ComputedProperties),
+          FeatureOrModule::Feature(Feature::ForOf),
+          FeatureOrModule::Feature(Feature::StickyRegex),
+          FeatureOrModule::Feature(Feature::DotAllRegex),
+          FeatureOrModule::Feature(Feature::UnicodeRegex),
+          FeatureOrModule::Feature(Feature::Spread),
+          FeatureOrModule::Feature(Feature::Parameters),
+          FeatureOrModule::Feature(Feature::Destructuring),
+          FeatureOrModule::Feature(Feature::BlockScoping),
+          FeatureOrModule::Feature(Feature::TypeOfSymbol),
+          FeatureOrModule::Feature(Feature::NewTarget),
+          FeatureOrModule::Feature(Feature::Regenerator),
+          FeatureOrModule::Feature(Feature::ExponentiationOperator),
+          FeatureOrModule::Feature(Feature::AsyncToGenerator),
+          FeatureOrModule::Feature(Feature::AsyncGeneratorFunctions),
+          FeatureOrModule::Feature(Feature::ObjectRestSpread),
+          FeatureOrModule::Feature(Feature::UnicodePropertyRegex),
+          FeatureOrModule::Feature(Feature::JsonStrings),
+          FeatureOrModule::Feature(Feature::OptionalCatchBinding),
+          FeatureOrModule::Feature(Feature::NamedCapturingGroupsRegex),
+          FeatureOrModule::Feature(Feature::MemberExpressionLiterals),
+          FeatureOrModule::Feature(Feature::PropertyLiterals),
+          FeatureOrModule::Feature(Feature::ReservedWords),
+          FeatureOrModule::Feature(Feature::ExportNamespaceFrom),
+          FeatureOrModule::Feature(Feature::NullishCoalescing),
+          FeatureOrModule::Feature(Feature::LogicalAssignmentOperators),
+          FeatureOrModule::Feature(Feature::OptionalChaining),
+          FeatureOrModule::Feature(Feature::ClassProperties),
+          FeatureOrModule::Feature(Feature::NumericSeparator),
+          FeatureOrModule::Feature(Feature::PrivateMethods),
+          FeatureOrModule::Feature(Feature::UnicodeEscapes),
+          FeatureOrModule::Feature(Feature::BugfixAsyncArrowsInClass),
+          FeatureOrModule::Feature(Feature::BugfixEdgeDefaultParam),
+          FeatureOrModule::Feature(Feature::BugfixTaggedTemplateCaching),
+        ],
         ..Default::default()
       }),
       test: None,
@@ -54,6 +99,7 @@ pub fn transpile(filename: String, source: &[u8]) -> Result<TranspiledModule> {
           ..Default::default()
         })),
         keep_class_names: true,
+        keep_decorators: true,
         external_helpers: false,
         loose: true,
         target: Some(JscTarget::Es2015),
