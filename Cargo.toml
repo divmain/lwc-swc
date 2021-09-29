@@ -1,5 +1,5 @@
 [package]
-authors = ["Dale Bustad <dale@divmain.com>"]
+authors = ["Dale Bustad <dbustad@salesforce.com>"]
 edition = "2018"
 name = "lwc-swc"
 version = "0.1.0"
