@@ -2,7 +2,7 @@ const { transpile, minify } = require('./index')
 
 const fileOne = `
   function main (obj) {
-    return obj?.stuff?.optional?.("maybe");
+    return obj?.stuff?.optional?.('maybe');
   }
 `;
 const fileOneBuffer = Buffer.from(fileOne);
@@ -21,8 +21,8 @@ const fileTwo = `
 const fileTwoBuffer = Buffer.from(fileTwo);
 
 (async () => {
-  console.log(await transpile("my-file.js", fileOneBuffer))
-  console.log(await transpile("my-other-file.js", fileTwoBuffer));
+  console.log(await transpile('my-file.js', fileOneBuffer))
+  console.log(await transpile('my-other-file.js', fileTwoBuffer));
   console.log(await Promise.all([
     minify(fileOne),
     minify(fileTwo)
