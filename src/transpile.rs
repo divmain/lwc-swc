@@ -1,8 +1,8 @@
 use napi::{Error, Result};
 use std::sync::Arc;
 use swc::{
-  config::Config, config::JscConfig, config::Options, config::SourceMapsConfig,
-  config::TransformConfig, Compiler, TransformOutput,
+  config::Config, config::JscConfig, config::Options, config::SourceMapsConfig, Compiler,
+  TransformOutput,
 };
 use swc_common::{
   errors::{ColorConfig, Handler},
@@ -27,10 +27,10 @@ pub struct TranspiledModule {
 pub fn transpile(filename: String, source: &[u8]) -> Result<TranspiledModule> {
   let compiler: Lrc<Compiler> = COMPILER.clone();
 
-  let cm: Lrc<SourceMap> = Default::default();
-  let handler = Handler::with_tty_emitter(ColorConfig::Auto, true, false, Some(cm.clone()));
+  let handler =
+    Handler::with_tty_emitter(ColorConfig::Auto, true, false, Some(compiler.cm.clone()));
 
-  let source_file = cm.new_source_file(
+  let source_file = compiler.cm.new_source_file(
     FileName::Custom(filename.clone()),
     std::str::from_utf8(&source)
       .map_err(|_| Error::from_reason("Invalid UTF-8.".into()))?
