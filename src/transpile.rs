@@ -1,8 +1,8 @@
 use napi::{Error, Result};
 use std::sync::Arc;
 use swc::{
-  config::Config, config::JscConfig, config::Options, config::SourceMapsConfig, Compiler,
-  TransformOutput,
+  config::Config, config::JscConfig, config::Options, config::SourceMapsConfig,
+  config::TransformConfig, Compiler, TransformOutput,
 };
 use swc_common::{
   errors::{ColorConfig, Handler},
@@ -95,7 +95,18 @@ pub fn transpile(filename: String, source: &[u8]) -> Result<TranspiledModule> {
       exclude: None,
       jsc: JscConfig {
         syntax: Some(Syntax::Es(EsConfig {
+          jsx: false,
+          num_sep: true,
+          class_private_props: true,
+          class_private_methods: true,
+          class_props: true,
           decorators: true,
+          decorators_before_export: false,
+          export_default_from: true,
+          export_namespace_from: true,
+          dynamic_import: true,
+          nullish_coalescing: true,
+          optional_chaining: true,
           ..Default::default()
         })),
         keep_class_names: true,
