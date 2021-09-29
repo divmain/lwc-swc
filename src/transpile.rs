@@ -82,7 +82,7 @@ pub fn transpile(filename: String, source: &[u8]) -> Result<TranspiledModule> {
           FeatureOrModule::Feature(Feature::LogicalAssignmentOperators),
           // FeatureOrModule::Feature(Feature::OptionalChaining),
           FeatureOrModule::Feature(Feature::ClassProperties),
-          FeatureOrModule::Feature(Feature::NumericSeparator),
+          // FeatureOrModule::Feature(Feature::NumericSeparator),
           FeatureOrModule::Feature(Feature::PrivateMethods),
           FeatureOrModule::Feature(Feature::UnicodeEscapes),
           FeatureOrModule::Feature(Feature::BugfixAsyncArrowsInClass),
