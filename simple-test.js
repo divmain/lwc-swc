@@ -1,26 +1,30 @@
-const { transpile } = require('./index')
+const { transpile, minify } = require('./index')
 
-const inputA = Buffer.from(`
+const fileOne = `
   function main (obj) {
     return obj?.stuff?.optional?.("maybe");
   }
-`);
+`;
+const fileOneBuffer = Buffer.from(fileOne);
 
-const inputB = Buffer.from(`
+const fileTwo = `
   import { LightningElement, api } from 'lwc';
 
-  class Example extends LightningElement {
+  export default class Example extends LightningElement {
       @api name = 'World!';
 
       @track myMethod() {
         return true;
       }
   }
-
-  export default Example;
-`);
+`;
+const fileTwoBuffer = Buffer.from(fileTwo);
 
 (async () => {
-  console.log(await transpile("my-file.js", inputA))
-  console.log(await transpile("my-other-file.js", inputB));
+  console.log(await transpile("my-file.js", fileOneBuffer))
+  console.log(await transpile("my-other-file.js", fileTwoBuffer));
+  console.log(await Promise.all([
+    minify(fileOne),
+    minify(fileTwo)
+  ]));
 })().catch(console.error);
